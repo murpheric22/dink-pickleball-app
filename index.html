@@ -834,8 +834,9 @@ document.addEventListener('click',e=>{
   const stop=e.target.closest('[data-stop]'); 
   const el=e.target.closest('[data-action]'); if(!el)return;
   const a=el.dataset.action;
-  // modal backdrop close
-  if(a==='modal-close'){ if(e.target.closest('[data-stop]')&&!e.target.closest('[data-action="modal-close"]')) return; app.modal=null; render(); return; }
+  // modal close: only a direct click on the backdrop itself, or an explicit close button, should close.
+  // (Clicks on inner elements like the textarea bubble up to the backdrop's data-action — ignore those.)
+  if(a==='modal-close'){ if(el.classList.contains('modal')&&e.target!==el) return; app.modal=null; render(); return; }
 
   if(a==='go-home'){ app.view='home'; app.tab='play'; render(); return; }
   if(a==='new-event'){ app.setup=blankSetup(); app.view='setup'; render(); return; }
